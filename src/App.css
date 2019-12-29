@@ -1,24 +1,33 @@
+*{
+  padding:0;
+  margin:0;
+}
+
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height:100vh
+  height:100vh;
 }
 
 .wrapper{
-  border:1px solid #000;
+  border:1px solid #424242;
 }
 
 .cell{
-  width:20px;
-  height:20px;
+  width:5px;
+  height:5px;
   display:inline-block;
 }
 
 .wall{
-  background:blue;
+  background:#69f0ae;
 }
 
 .road{
-  background:red;
+  background:#fff;
+}
+
+.path{
+  background:yellow;
 }
