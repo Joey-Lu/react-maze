@@ -19,7 +19,7 @@ export default class MazeData implements IMaze {
     this.m = data.m;
     this.maze = createCells(this.n, this.m); //create an empty two-dimensional array
 
-    this.visited = createCells(this.n, this.m, false);
+    this.visited = createCells(this.n, this.m, 0);
 
     this.path = createCells(this.n, this.m, false);
 

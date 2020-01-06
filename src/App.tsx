@@ -10,26 +10,37 @@ const App: React.FC = () => {
   const Maze: MazeConstructor = MazeData;
   const maze: IMaze = new Maze(mazeJson);
   const [data, setData] = useState(maze.maze);
-  const [path, setPath] = useState(maze.maze);
+  const [path, setPath] = useState(maze.path);
 
   const handleClick = (): void => {
+    maze.visited[maze.entranceX][maze.entranceY] = 1;
     go(maze.entranceX, maze.entranceY);
-  }
-
-  const go = (x: number, y: number): void => {
-    if (!maze.isInArea(x, y)) throw new Error('x or y is not inside the maze')
-    maze.visited![x][y] = true;
-    maze.path[x][y] = true;
-    maze.maze[x][y] = 1;
-    if (x === maze.exitX && y === maze.exitY) return;
-    for (let i = 0; i < 4; i++) {
-      let newX = x + direction[i][0];
-      let newY = y + direction[i][1];
-      if (maze.isInArea(newX, newY) && maze.getCell(newX, newY) === MazeData.ROAD && !maze.visited![newX][newY]) {
-        go(newX, newY)
+    const path = Array.from(data);
+    for(let i =0;i<path.length;i++){
+      for(let j =0;j<path.length;j++){
+        if(path[i][j] === ' '){
+          if(maze.visited[i][j] === 1)
+            path[i][j] = 1
+        }
       }
     }
+    setData(path);
   }
+
+  const go = (x: number, y: number): boolean => {
+    if (x === maze.exitX && y === maze.exitY) return true;
+    for (let i = 0; i < 4; i++) {
+      let newX = x + direction[i][0];
+      let newY = y + direction[i][1]; 
+      if (maze.isInArea(newX, newY) && maze.getCell(newX, newY) === MazeData.ROAD && maze.visited![newX][newY] === 0) {
+        maze.visited[newX][newY] = 1;
+        if(go(newX, newY)) return true;
+        maze.visited[newX][newY] = 0;
+      }
+    }
+    return false;
+  }
+
   return (
     <div className="container">
       <div className="wrapper">
@@ -39,9 +50,9 @@ const App: React.FC = () => {
             <div key={i} style={{ fontSize: 0 }}>{
               rows.map((col, k) => {
                 return (<div key={k} className={classNames('cell', {
-                  'wall': col === '#',
-                  'path': col === 1,
-                  'road': col === ' ',
+                  'wall': data[i][k] === '#',
+                  'road': data[i][k] === ' ',
+                  'path': data[i][k] === 1,
                 })} />)
               })
             }</div>
